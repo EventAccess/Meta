@@ -1,53 +1,6 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
-		"config:base",
-		":dependencyDashboard",
-		":timezone(Etc/UTC)",
-		":preserveSemverRanges"
-	],
-	"internalChecksFilter": "strict",
-	"rebaseWhen": "conflicted",
-	"packageRules": [
-		{
-			"description": "Auto update the Git submodules of this repository and auto merge the branches",
-			"matchManagers": [
-				"git-submodules"
-			],
-			"addLabels": [
-				"git-submodules"
-			],
-			"automerge": true,
-			"ignoreTests": true,
-			"automergeType": "branch"
-		},
-		{
-			"description": "Add the ci and github-actions GitHub label to GitHub Action bump PRs",
-			"matchManagers": [
-				"github-actions"
-			],
-			"labels": [
-				"ci",
-				"github-actions"
-			]
-		},
-		{
-			"description": "Add the pip and dependencies GitHub label to requirements bump PRs",
-			"matchManagers": [
-				"pip_requirements"
-			],
-			"labels": [
-				"pip",
-				"dependencies"
-			]
-		}
-	],
-	"git-submodules": {
-		"enabled": true
-	},
-	"pip_requirements": {
-		"fileMatch": [
-			"requirements(-[a-z0-9]+)?\\.txt$"
-		]
-	}
+		"github>EventAccess/renovate-config"
+	]
 }
