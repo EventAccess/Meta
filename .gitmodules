@@ -13,3 +13,6 @@
 [submodule "Crew-Discord-Bot"]
 	path = Crew-Discord-Bot
 	url = https://github.com/EventAccess/Crew-Discord-Bot.git
+[submodule "renovate-config"]
+	path = renovate-config
+	url = https://github.com/EventAccess/renovate-config.git
