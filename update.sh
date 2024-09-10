@@ -11,34 +11,24 @@ git submodule update --init --recursive
 
 
 # Set up (ssh) push access for submodules
-pushd Crewgrensesnitt/ > /dev/null
-    git remote set-url --push origin git@github.com:EventAccess/Crewgrensesnitt.git
-    pushd database/ > /dev/null
-        git remote set-url --push origin git@github.com:EventAccess/django-app-database.git
-    popd > /dev/null
-popd > /dev/null
+function ensure_ssh_push_submodules() {
+    if test -f .gitmodules; then
+        IN=$(sed -Ezn 's!\[submodule\ "[^"]+"\].*?(\s*(path\s*=\s*([^\n]+)|url\s*=\s*([^\n]+))){2}!\3\t\4§!gmp' .gitmodules)
 
-pushd Registrering/ > /dev/null
-    git remote set-url --push origin git@github.com:EventAccess/Registrering.git
-    pushd database/ > /dev/null
-        git remote set-url --push origin git@github.com:EventAccess/django-app-database.git
-    popd > /dev/null
-popd > /dev/null
+        while IFS= read -r line; do
+            IFS=$'\t' read -ra LINE <<< "${line[@]}"
+            dir="${LINE[0]}"
+            url="${LINE[1]}"
 
-pushd Foreldregrensesnitt/ > /dev/null
-    git remote set-url --push origin git@github.com:EventAccess/Foreldregrensesnitt.git
-popd > /dev/null
+            newurl=$(sed -E 's!https?://github.com/!git@github.com:!g' <<< "${url}")
+            pushd "${dir}" > /dev/null
+                git remote set-url --push origin "${newurl}"
+                ensure_ssh_push_submodules
+            popd > /dev/null
+        done <<< "${IN[@]}"
+    fi
+}
 
-pushd NFCScanner/ > /dev/null
-    git remote set-url --push origin git@github.com:EventAccess/NFCScanner.git
-popd > /dev/null
-
-pushd Crew-Discord-Bot/ > /dev/null
-    git remote set-url --push origin git@github.com:EventAccess/Crew-Discord-Bot.git
-popd > /dev/null
-
-pushd renovate-config/ > /dev/null
-    git remote set-url --push origin git@github.com:EventAccess/renovate-config.git
-popd > /dev/null
+ensure_ssh_push_submodules
 
 # TODO: Set up pre-commit
