@@ -25,7 +25,7 @@ pushd Registrering/ > /dev/null
     popd > /dev/null
 popd > /dev/null
 
-pushd Foreldregrensesnitt > /dev/null
+pushd Foreldregrensesnitt/ > /dev/null
     git remote set-url --push origin git@github.com:EventAccess/Foreldregrensesnitt.git
 popd > /dev/null
 
@@ -37,5 +37,8 @@ pushd Crew-Discord-Bot/ > /dev/null
     git remote set-url --push origin git@github.com:EventAccess/Crew-Discord-Bot.git
 popd > /dev/null
 
+pushd renovate-config/ > /dev/null
+    git remote set-url --push origin git@github.com:EventAccess/renovate-config.git
+popd > /dev/null
 
 # TODO: Set up pre-commit
