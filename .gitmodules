@@ -1,0 +1,15 @@
+[submodule "Crewgrensesnitt"]
+	path = Crewgrensesnitt
+	url = https://github.com/EventAccess/Crewgrensesnitt.git
+[submodule "Registrering"]
+	path = Registrering
+	url = https://github.com/EventAccess/Registrering.git
+[submodule "Foreldregrensesnitt"]
+	path = Foreldregrensesnitt
+	url = https://github.com/EventAccess/Foreldregrensesnitt.git
+[submodule "NFCScanner"]
+	path = NFCScanner
+	url = https://github.com/EventAccess/NFCScanner.git
+[submodule "Crew-Discord-Bot"]
+	path = Crew-Discord-Bot
+	url = https://github.com/EventAccess/Crew-Discord-Bot.git
