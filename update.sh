@@ -36,3 +36,4 @@ function ensure_ssh_push_submodules() {
 ensure_ssh_push_submodules
 
 # TODO: Set up pre-commit
+# Issue URL: https://github.com/EventAccess/Meta/issues/18
