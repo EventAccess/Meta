@@ -32,6 +32,8 @@ jobs:
       contents: write
     steps:
       - uses: "actions/checkout@v4"
+        with:
+          ssh-key: "${{ secrets.ACTION_PUSH_KEY }}"
       - name: "TODO to Issue"
         uses: "alstr/todo-to-issue-action@v5"
         with:
