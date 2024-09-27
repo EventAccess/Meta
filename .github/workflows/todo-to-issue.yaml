@@ -27,6 +27,8 @@ jobs:
   update-todo:
     if: ${{ github.repository_owner == 'EventAccess' }}
     runs-on: "ubuntu-latest"
+    permissions:
+      issues: write
     steps:
       - uses: "actions/checkout@v4"
       - name: "TODO to Issue"
@@ -44,12 +46,10 @@ jobs:
         env:
           MANUAL_COMMIT_REF: ${{ inputs.MANUAL_COMMIT_REF }}
           MANUAL_BASE_REF: ${{ inputs.MANUAL_BASE_REF }}
-      - name: Set Git user
+      - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      - name: Commit and Push Changes
-        run: |
           if [ -n "$(git status --ignore-submodules --untracked-files=no --porcelain)" ]; then
             set -ex
             git add -vu .
