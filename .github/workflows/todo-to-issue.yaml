@@ -22,6 +22,8 @@ on:
     secrets:
       PROJECTS_SECRET:
         required: true
+      ACTION_PUSH_KEY:
+        required: true
 
 jobs:
   update-todo:
