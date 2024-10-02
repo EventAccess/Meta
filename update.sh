@@ -71,4 +71,5 @@ ensure_ssh_push_submodules
 # Issue URL: https://github.com/EventAccess/Meta/issues/18
 
 # TODO: Prune merged branches
+# Issue URL: https://github.com/EventAccess/Meta/issues/22
 #   git branch --merged | grep -Ev "(^\*|^\+|^\s*(master|main|dev)\s*$)" | xargs --no-run-if-empty git branch -d
