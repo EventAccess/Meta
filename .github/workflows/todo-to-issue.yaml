@@ -38,8 +38,8 @@ jobs:
       - name: "TODO to Issue"
         uses: "alstr/todo-to-issue-action@v5"
         with:
-          INSERT_ISSUE_URLS: "true"
-          CLOSE_ISSUES: "true"
+        #   INSERT_ISSUE_URLS: "true"
+        #   CLOSE_ISSUES: "true"
           PROJECT: "organization/EventAccess/Tasks"
           PROJECTS_SECRET: "${{ secrets.PROJECTS_SECRET }}"
           IDENTIFIERS: | # JSON list, careful with the comma
@@ -50,14 +50,14 @@ jobs:
         env:
           MANUAL_COMMIT_REF: ${{ inputs.MANUAL_COMMIT_REF }}
           MANUAL_BASE_REF: ${{ inputs.MANUAL_BASE_REF }}
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -n "$(git status --ignore-submodules --untracked-files=no --porcelain)" ]; then
-            set -ex
-            git add -vu .
-            git commit -m "Automatically added GitHub issue links to TODOs"
-            git push  # Failure probably ok?
-            # If not, we need to handle rebasing here
-          fi
+    #   - name: Commit and Push Changes
+    #     run: |
+    #       git config --global user.name "github-actions[bot]"
+    #       git config --global user.email "github-actions[bot]@users.noreply.github.com"
+    #       if [ -n "$(git status --ignore-submodules --untracked-files=no --porcelain)" ]; then
+    #         set -ex
+    #         git add -vu .
+    #         git commit -m "Automatically added GitHub issue links to TODOs"
+    #         git push  # Failure probably ok?
+    #         # If not, we need to handle rebasing here
+    #       fi
