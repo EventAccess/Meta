@@ -6,12 +6,12 @@ services:
       - .:/usr/src/Registrering
     ports:
       - "8000:8000"
-    env_file:
-      - ./dev.env
+    env_file: dev.env
     depends_on:
       - Database
   Database:
     image: postgres:15
+    env_file: dev.env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
