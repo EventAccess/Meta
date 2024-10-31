@@ -10,7 +10,7 @@ services:
     depends_on:
       - Database
   Database:
-    image: postgres:15
+    image: postgres:17
     env_file: dev.env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
