@@ -8,10 +8,11 @@ services:
       - "8000:8000"
     env_file: dev.env
     depends_on:
-      - Database
-  Database:
+      - database
+  database:
     image: postgres:17
     env_file: dev.env
+    shm_size: 256MB
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
