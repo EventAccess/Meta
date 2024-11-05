@@ -1,22 +1,151 @@
 services:
-  web:
-    build: ./
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/usr/src/Registrering
-    ports:
-      - "8000:8000"
-    env_file: .env
+  django:
+    build:
+      context: .
+      target: server
+      pull: true
+    pull_policy: build
+    #volumes:
+    #  - django_media:/app/media:rw
+
+    command: daphne config.asgi:application -b 0.0.0.0
+
     depends_on:
       - database
+    profiles:
+      - prod
+    env_file:
+      - .env
+    environment:
+      REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin)`)
+      - traefik.http.services.registration-backend.loadbalancer.server.port=8000
+      #- traefik.http.routers.registration-backend.entrypoints=web,websecure
+
+  django-staticfiles:
+    build:
+      context: .
+      target: static-server
+      pull: true
+    pull_policy: build
+
+    # TODO: Set up Django media dir
+    #       Do we need this?
+    #       I'm not sure if it is needed yet; low pri backlog
+    #volumes:
+    #  - django_media:/srv/http/media:ro
+    profiles:
+      - prod
+    env_file:
+      - .env
+    environment:
+      REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+      SERVER_LOG_LEVEL: warn
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.registration-backend-staticfiles.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(static)`)
+      - traefik.http.services.registration-backend-staticfiles.loadbalancer.server.port=80
+      #- traefik.http.routers.registration-backend-staticfiles.entrypoints=web,websecure
+
+  django-dev:
+    build:
+      context: .
+      target: dev
+      pull: true
+    pull_policy: build
+
+    command: python manage.py runserver 0.0.0.0:8000
+
+    volumes:
+      - .:/app:rw
+
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    profiles:
+      - dev
+    environment:
+      REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin|static)`)
+      #- traefik.http.routers.registration-backend.entrypoints=web,websecure
+
   database:
     image: postgres:17
-    env_file: .env
+    env_file:
+      - .env
     shm_size: 256MB
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    profiles:
+      - prod
+      - dev
+
+  nextjs:
+    build:
+      context: ./registration-frontend-react/
+      target: static-server
+      pull: true
+    pull_policy: build
+
+    profiles:
+      - prod
+    environment:
+      REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.registration-frontend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`)
+      - traefik.http.services.registration-frontend.loadbalancer.server.port=80
+      #- traefik.http.routers.registration-frontend.entrypoints=web,websecure
+
+  nextjs-dev:
+    build:
+      context: ./registration-frontend-react/
+      target: dev-server
+      pull: true
+    pull_policy: build
+
+    volumes:
+      - ./registration-frontend-react:/app:rw
+    ports:
+      - 3000:3000/tcp
+    profiles:
+      - dev
+    environment:
+      REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.registration-frontend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`)
+      #- traefik.http.routers.registration-frontend.entrypoints=web,websecure
+
+  reverse-proxy:
+    image: traefik:v3.2.0
+    pull_policy: always
+    command:
+      - --api.insecure=true
+      - --providers.docker
+      - --entryPoints.web.address=:80
+      #- --entryPoints.websecure.address=:443
+      - --providers.docker.exposedbydefault=false
+    ports:
+      - 80:80/tcp
+      # TODO: Add https configuration
+      #- 443:443/tcp
+      # The Web UI (enabled by --api.insecure=true)
+      - 8080:8080
+    profiles:
+      - dev
+      - prod
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   postgres_data:
-
-
+  #django_media:
