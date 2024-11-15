@@ -1,7 +1,7 @@
 services:
   django:
     build:
-      context: .
+      context: ./Registrering
       target: server
       pull: true
     pull_policy: build
@@ -26,7 +26,7 @@ services:
 
   django-staticfiles:
     build:
-      context: .
+      context: ./Registrering
       target: static-server
       pull: true
     pull_policy: build
@@ -51,7 +51,7 @@ services:
 
   django-dev:
     build:
-      context: .
+      context: ./Registrering
       target: dev
       pull: true
     pull_policy: build
@@ -59,7 +59,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
 
     volumes:
-      - .:/app:rw
+      - ./Registrering:/app:rw
 
     ports:
       - "8000:8000"
@@ -89,7 +89,7 @@ services:
 
   nextjs:
     build:
-      context: ./registration-frontend-react/
+      context: ./Registrering/registration-frontend-react/
       target: static-server
       pull: true
     pull_policy: build
@@ -106,13 +106,13 @@ services:
 
   nextjs-dev:
     build:
-      context: ./registration-frontend-react/
+      context: ./Registrering/registration-frontend-react/
       target: dev-server
       pull: true
     pull_policy: build
 
     volumes:
-      - ./registration-frontend-react:/app:rw
+      - ./Registrering/registration-frontend-react:/app:rw
     ports:
       - 3000:3000/tcp
     profiles:
