@@ -1,7 +1,7 @@
 services:
   django:
     build:
-      context: ./Registrering
+      context: ./BackendAPI
       target: server
       pull: true
     pull_policy: build
@@ -26,7 +26,7 @@ services:
 
   django-staticfiles:
     build:
-      context: ./Registrering
+      context: ./BackendAPI
       target: static-server
       pull: true
     pull_policy: build
@@ -51,7 +51,7 @@ services:
 
   django-dev:
     build:
-      context: ./Registrering
+      context: ./BackendAPI
       target: dev
       pull: true
     pull_policy: build
@@ -59,7 +59,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
 
     volumes:
-      - ./Registrering:/app:rw
+      - ./BackendAPI:/app:rw
 
     ports:
       - "8000:8000"
