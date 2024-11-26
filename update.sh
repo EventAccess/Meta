@@ -16,8 +16,7 @@ function update_default_branch() {
         if ! git pull --ff-only origin "${default_branch}" \
         && [ -z "$current_branch" ] \
         && [ -n "$(git status --porcelain --ignore-submodules=dirty)" ]; then
-            # Not sure exactly how this happened,
-            # possibly due to failed dev:dev fetch in an earlier iteration.
+            # We get into detached head with git submodule update --init
             echo
             pwd
             echo
@@ -45,6 +44,9 @@ function ensure_ssh_push_submodules() {
     fi
 
     if test -f .gitmodules; then
+        # Initialize git submodules
+        git submodule init
+
         IN=$(sed -Ezn 's!\[submodule\ "[^"]+"\].*?(\s*(path\s*=\s*([^\n]+)|url\s*=\s*([^\n]+))){2}!\3\t\4!gmp' .gitmodules)
 
         while IFS= read -r line; do
@@ -72,7 +74,7 @@ function ensure_ssh_push_submodules() {
 update_default_branch
 
 # Initialize git submodules
-git submodule update --init --recursive
+git submodule init
 
 ensure_ssh_push_submodules
 
