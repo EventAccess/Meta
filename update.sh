@@ -48,6 +48,9 @@ function ensure_ssh_push_submodules() {
         IN=$(sed -Ezn 's!\[submodule\ "[^"]+"\].*?(\s*(path\s*=\s*([^\n]+)|url\s*=\s*([^\n]+))){2}!\3\t\4!gmp' .gitmodules)
 
         while IFS= read -r line; do
+            if test -z "${line[@]}"; then
+                continue
+            fi
             IFS=$'\t' read -ra LINE <<< "${line[@]}"
             dir="${LINE[0]}"
             url="${LINE[1]}"
