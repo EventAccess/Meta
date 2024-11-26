@@ -38,6 +38,12 @@ function update_default_branch() {
 
 # Set up (ssh) push access for submodules
 function ensure_ssh_push_submodules() {
+    if test -f .git-blame-ignore-revs; then
+        git config --local blame.ignoreRevsFile .git-blame-ignore-revs
+    else
+        git config --local blame.ignoreRevsFile ""
+    fi
+
     if test -f .gitmodules; then
         IN=$(sed -Ezn 's!\[submodule\ "[^"]+"\].*?(\s*(path\s*=\s*([^\n]+)|url\s*=\s*([^\n]+))){2}!\3\t\4!gmp' .gitmodules)
 
