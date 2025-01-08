@@ -125,7 +125,7 @@ services:
       #- traefik.http.routers.registration-frontend.entrypoints=web,websecure
 
   reverse-proxy:
-    image: traefik:v3.2.3
+    image: traefik:v3.3.1
     pull_policy: always
     command:
       - --api.insecure=true
