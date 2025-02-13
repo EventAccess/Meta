@@ -20,7 +20,7 @@ services:
       REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin)`)
+      - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin|registration)`)
       - traefik.http.services.registration-backend.loadbalancer.server.port=8000
       #- traefik.http.routers.registration-backend.entrypoints=web,websecure
 
@@ -73,7 +73,7 @@ services:
       REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin|static)`)
+      - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin|static|registration)`)
       #- traefik.http.routers.registration-backend.entrypoints=web,websecure
 
   database:
