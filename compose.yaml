@@ -5,9 +5,8 @@ services:
       target: server
       pull: true
     pull_policy: build
-    #volumes:
-    #  - django_media:/app/media:rw
-
+    volumes:
+      - django_media:/app/media:rw
     command: daphne config.asgi:application -b 0.0.0.0
 
     depends_on:
@@ -18,6 +17,7 @@ services:
       - .env
     environment:
       REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+      DJANGO_DEBUG: False
     labels:
       - traefik.enable=true
       - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin|registration)`)
@@ -31,11 +31,8 @@ services:
       pull: true
     pull_policy: build
 
-    # TODO: Set up Django media dir
-    #       Do we need this?
-    #       I'm not sure if it is needed yet; low pri backlog
-    #volumes:
-    #  - django_media:/srv/http/media:ro
+    volumes:
+      - django_media:/srv/http/media:ro
     profiles:
       - prod
     env_file:
@@ -71,6 +68,7 @@ services:
       - dev
     environment:
       REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+      DJANGO_DEBUG: True
     labels:
       - traefik.enable=true
       - traefik.http.routers.registration-backend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(api|admin|static|registration)`)
@@ -124,6 +122,28 @@ services:
       - traefik.http.routers.registration-frontend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`)
       #- traefik.http.routers.registration-frontend.entrypoints=web,websecure
 
+
+  nextjs-info-dev:
+    build:
+      context: ./Crewgrensesnitt/frontend/
+      target: dev-server
+      pull: true
+    pull_policy: build
+
+    volumes:
+      - ./Crewgrensesnitt/frontend:/app:rw
+    ports:
+      - 3001:3000/tcp
+    profiles:
+      - dev
+    environment:
+      REGISTRATION_HOSTNAME: ${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}
+      DJANGO_DEBUG: True
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.info-frontend.rule=Host(`${REGISTRATION_HOSTNAME:-registration.eventaccess.localhost}`) && PathRegexp(`^/(info)`)
+      #- traefik.http.routers.info-frontend.entrypoints=web,websecure
+
   reverse-proxy:
     image: traefik:v3.3.3
     pull_policy: always
@@ -148,4 +168,4 @@ services:
 
 volumes:
   postgres_data:
-  #django_media:
+  django_media:
