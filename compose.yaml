@@ -75,7 +75,7 @@ services:
       #- traefik.http.routers.registration-backend.entrypoints=web,websecure
 
   database:
-    image: postgres:17
+    image: postgres:18
     env_file:
       - .env
     shm_size: 256MB
