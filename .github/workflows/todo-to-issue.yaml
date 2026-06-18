@@ -32,7 +32,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v7"
         with:
           ssh-key: "${{ secrets.ACTION_PUSH_KEY }}"
       - name: "TODO to Issue"
