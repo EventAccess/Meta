@@ -145,7 +145,7 @@ services:
       #- traefik.http.routers.info-frontend.entrypoints=web,websecure
 
   reverse-proxy:
-    image: traefik:v3.4.0
+    image: traefik:v3.7.13
     pull_policy: always
     command:
       - --api.insecure=true
